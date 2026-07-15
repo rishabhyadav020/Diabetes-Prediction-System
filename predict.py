@@ -1,6 +1,95 @@
 import math
 
-# -------- PRE-TRAINED LOGISTIC REGRESSION MODEL --------
+# ========================================================
+# PURE PYTHON CORE MATH FUNCTIONS
+# ========================================================
+
+def calculate_correlation(x, y):
+    n = len(x)
+    mean_x = sum(x) / n
+    mean_y = sum(y) / n
+    
+    num = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(n))
+    den_x = sum((x[i] - mean_x) ** 2 for i in range(n))
+    den_y = sum((y[i] - mean_y) ** 2 for i in range(n))
+    
+    if den_x == 0 or den_y == 0:
+        return 0
+    return num / math.sqrt(den_x * den_y)
+
+
+# ========================================================
+# DATA LOADING & ANALYSIS SECTION
+# ========================================================
+
+try:
+    with open("diabetes.csv", "r") as f:
+        lines = f.readlines()
+        
+    headers = lines[0].strip().split(",")
+    data_rows = [line.strip().split(",") for line in lines[1:] if line.strip()]
+    
+    columns = {h: [] for h in headers}
+    for row in data_rows:
+        for i, val in enumerate(row):
+            columns[headers[i]].append(float(val))
+            
+    outcome = columns["Outcome"]
+
+    # --- CORRELATION MATRIX ---
+    print("\n========== CORRELATION MATRIX ==========")
+    features = headers
+
+    # Header print
+    print(f"{'Feature':<20}", end=" ")
+    for h in features:
+        print(f"{h:<12}", end=" ")
+    print()
+
+    # Matrix values
+    for f1 in features:
+        print(f"{f1:<20}", end=" ")
+        for f2 in features:
+            corr = calculate_correlation(columns[f1], columns[f2])
+            print(f"{corr:<12.3f}", end=" ")
+        print()
+    print("=" * 130)  # Width extended for better tabular view
+
+    # --- FEATURE SELECTION BASED ON OUTCOME CORRELATION ---
+    print("\n========== FEATURE SELECTION ==========")
+    rankings = []
+    for h in headers:
+        if h != "Outcome":
+            correlation = calculate_correlation(columns[h], outcome)
+            rankings.append((h, correlation))
+
+    # High correlation ko upar lane ke liye
+    rankings.sort(key=lambda x: abs(x[1]), reverse=True)
+
+    selected_features = []
+    print("\nFeature Importance with Diabetes Outcome:")
+    for feature, value in rankings:
+        if abs(value) >= 0.2:
+            selected_features.append(feature)
+            print(f"✔ {feature:<25} Correlation = {value:.3f} (Important)")
+        else:
+            print(f"✖ {feature:<25} Correlation = {value:.3f} (Less Important)")
+
+    print("\nFinal Selected Features:")
+    print(selected_features)
+    print("=" * 50)
+
+except FileNotFoundError:
+    print("⚠️ Warning: 'diabetes.csv' file nahi mili. Data analysis report skip ho rahi hai.")
+except Exception as e:
+    print(f"⚠️ Data analysis error: {e}")
+
+print("\n" + "="*50 + "\n")
+
+
+# ========================================================
+# PRE-TRAINED LOGISTIC REGRESSION MODEL (Tumhara Core Code)
+# ========================================================
 
 intercept = -8.40479
 
@@ -15,85 +104,49 @@ weights = {
     "Age": 0.01486
 }
 
-
-# -------- Prediction Function --------
-
 def predict_diabetes(patient_data):
-
     z = intercept
-
     for feature, value in patient_data.items():
         z += weights[feature] * value
 
-    # Logistic Regression Sigmoid Function
     probability = 1 / (1 + math.exp(-z))
-
     return probability
 
 
-
-# -------- Main Program --------
-
+# -------- Main Input/Output Program --------
 print("====================================")
 print("     Diabetes Prediction System")
 print("====================================")
 print("Model Status: Ready")
 print()
 
-
 try:
-
     print("Enter Patient Details:")
-
     patient_data = {
-
         "Pregnancies": float(input("Pregnancies: ")),
-
         "Glucose": float(input("Glucose Level: ")),
-
         "BloodPressure": float(input("Blood Pressure: ")),
-
         "SkinThickness": float(input("Skin Thickness: ")),
-
         "Insulin": float(input("Insulin Level: ")),
-
         "BMI": float(input("BMI: ")),
-
-        "DiabetesPedigree": float(
-            input("Diabetes Pedigree Function: ")
-        ),
-
+        "DiabetesPedigree": float(input("Diabetes Pedigree Function: ")),
         "Age": float(input("Age: "))
     }
 
-
     probability = predict_diabetes(patient_data)
 
-
     print("\n=========== RESULT ===========")
-
-    print(
-        f"Diabetes Risk Probability: {probability*100:.2f}%"
-    )
-
+    print(f"Diabetes Risk Probability: {probability*100:.2f}%")
 
     if probability >= 0.5:
         print("⚠️ ALERT: Diabetes Risk Detected")
         print("Patient may have diabetes.")
-
     else:
         print("✅ SAFE: No Diabetes Risk Detected")
         print("Patient is likely not diabetic.")
-
-
     print("==============================")
 
-
-
 except ValueError:
-
     print("Error: Please enter only numerical values.")
-
 except Exception as e:
-
     print("Unexpected Error:", e)
