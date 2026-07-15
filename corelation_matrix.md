@@ -1,27 +1,12 @@
-# 📊 Preprocessing Report: Correlation Matrix & Feature Selection
+# 📊 Preprocessing Report: Correlation Matrix Analysis
 
-This report presents the preprocessing analysis performed on the **Pima Indians Diabetes Dataset** before training the Logistic Regression model. Pearson Correlation was used to measure the relationship between each feature and the target variable (**Outcome**) and to identify the most important features for diabetes prediction.
-
----
-
-## 1️⃣ Feature Selection Summary
-
-| Feature Name | Correlation with Outcome | Selection Status | Reason |
-| :--- | :---: | :---: | :--- |
-| **Glucose** | **0.466** | ⭐ **MAIN FEATURE** | Highest positive correlation with diabetes outcome, making it the most influential predictor. |
-| **BMI** | **0.293** | ⭐ **MAIN FEATURE** | Higher Body Mass Index is associated with an increased risk of diabetes. |
-| **Age** | **0.238** | ⭐ **MAIN FEATURE** | Diabetes risk generally increases with age. |
-| **Pregnancies** | **0.222** | ⭐ **MAIN FEATURE** | Shows a significant positive relationship with the target variable. |
-| **DiabetesPedigree** | **0.174** | 🔹 **MEDIUM FEATURE** | Family history has a moderate influence on diabetes prediction. |
-| **Insulin** | **0.131** | 🔹 **LOW FEATURE** | Weak positive relationship with the target variable. |
-| **BloodPressure** | **0.065** | ✖ **LOW IMPACT** | Very weak correlation with the target variable. |
-| **SkinThickness** | **0.057** | ✖ **LOW IMPACT** | Minimal influence due to weak correlation and the presence of missing/zero values. |
-
-> **📌 Selection Criterion:** Features with **|Correlation| ≥ 0.20** were selected as the primary predictors for the Logistic Regression model.
+This report presents the statistical analysis performed on the **Pima Indians Diabetes Dataset** using **Pearson Correlation**. It measures the linear relationship between each pair of variables and highlights how they correlate with the target variable (`Outcome`).
 
 ---
 
-## 2️⃣ Correlation Matrix (Key Features)
+## 🔢 Correlation Matrix (Key Features)
+
+Below is the filtered matrix showing the relationships between the features that carry significant statistical weight for diabetes prediction.
 
 | Features | Glucose | BMI | Age | Pregnancies | BloodPressure | Outcome |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -32,15 +17,14 @@ This report presents the preprocessing analysis performed on the **Pima Indians 
 | **BloodPressure** | 0.153 | 0.282 | 0.240 | 0.141 | **1.000** | **0.065** |
 | **Outcome** | **0.466** | **0.293** | **0.238** | **0.222** | **0.065** | **1.000** |
 
-> **Note:** The complete correlation matrix was generated during preprocessing. For better readability, only the key features with the highest relevance to diabetes prediction are presented here.
+> **📌 Note:** The complete correlation matrix was generated during preprocessing. For better readability and focused analysis, only the key features with higher relevance to diabetes prediction are presented here.
 
 ---
 
-## 3️⃣ Conclusion
+## 💡 Key Observations
 
-- **Glucose** is the most important feature for predicting diabetes.
-- **BMI**, **Age**, and **Pregnancies** also show significant positive correlations with the target variable.
-- **DiabetesPedigree** and **Insulin** provide additional predictive information but have comparatively lower influence.
-- **BloodPressure** and **SkinThickness** show weak correlations and contribute less to the prediction model.
+* **Direct Predictor:** `Glucose` shares the highest linear trend with the `Outcome` variable at **0.466**.
+* **Inter-feature Dependency:** A notable correlation of **0.544** exists between `Age` and `Pregnancies`, which is biologically expected. 
+* **Independent Features:** `BloodPressure` shows an extremely weak correlation (**0.065**) across the dataset.
 
-**Based on the Pearson Correlation analysis, the selected features were used to train the Logistic Regression model for diabetes prediction.**
+Dekho shi hai correlation matrix 
