@@ -1,4 +1,23 @@
 import math
+import io
+
+csv_data = """Pregnancies,Glucose,BloodPressure,SkinThickness,Insulin,BMI,DiabetesPedigree,Age,Outcome
+6,148,72,35,0,33.6,0.627,50,1
+1,85,66,29,0,26.6,0.351,31,0
+8,183,64,0,0,23.3,0.672,32,1
+1,89,66,23,94,28.1,0.167,21,0
+0,137,40,35,168,43.1,2.288,33,1
+5,116,74,0,0,25.6,0.201,30,0
+3,78,50,32,88,31.0,0.248,26,1
+10,115,0,0,0,35.3,0.134,29,0
+2,197,70,45,543,30.5,0.158,53,1
+8,125,96,0,0,0.0,0.232,54,1
+4,110,92,0,0,37.6,0.191,30,0
+10,168,74,0,0,38.0,0.537,34,1
+1,103,30,38,83,43.3,0.183,33,0
+1,189,60,23,846,30.1,0.398,59,1
+5,166,72,19,175,25.8,0.587,51,1
+"""
 
 # ========================================================
 # PURE PYTHON CORE MATH FUNCTIONS
@@ -17,78 +36,64 @@ def calculate_correlation(x, y):
         return 0
     return num / math.sqrt(den_x * den_y)
 
+# Data Parsing
+lines = csv_data.strip().split("\n")
+headers = lines[0].strip().split(",")
+data_rows = [line.strip().split(",") for line in lines[1:] if line.strip()]
 
-# ========================================================
-# DATA LOADING & ANALYSIS SECTION
-# ========================================================
-
-try:
-    with open("diabetes.csv", "r") as f:
-        lines = f.readlines()
+columns = {h: [] for h in headers}
+for row in data_rows:
+    for i, val in enumerate(row):
+        columns[headers[i]].append(float(val))
         
-    headers = lines[0].strip().split(",")
-    data_rows = [line.strip().split(",") for line in lines[1:] if line.strip()]
-    
-    columns = {h: [] for h in headers}
-    for row in data_rows:
-        for i, val in enumerate(row):
-            columns[headers[i]].append(float(val))
-            
-    outcome = columns["Outcome"]
+outcome = columns["Outcome"]
 
-    # --- CORRELATION MATRIX ---
-    print("\n========== CORRELATION MATRIX ==========")
-    features = headers
+# --- DYNAMIC CORRELATION MATRIX PRINT ---
+print("\n========== CORRELATION MATRIX ==========")
+features = headers
 
-    # Header print
-    print(f"{'Feature':<20}", end=" ")
-    for h in features:
-        print(f"{h:<12}", end=" ")
+# Header row display
+print(f"{'Feature':<20}", end=" ")
+for h in features:
+    print(f"{h:<12}", end=" ")
+print()
+
+# Row values display
+for f1 in features:
+    print(f"{f1:<20}", end=" ")
+    for f2 in features:
+        corr = calculate_correlation(columns[f1], columns[f2])
+        print(f"{corr:<12.3f}", end=" ")
     print()
+print("=" * 130)
 
-    # Matrix values
-    for f1 in features:
-        print(f"{f1:<20}", end=" ")
-        for f2 in features:
-            corr = calculate_correlation(columns[f1], columns[f2])
-            print(f"{corr:<12.3f}", end=" ")
-        print()
-    print("=" * 130)  # Width extended for better tabular view
+# --- FEATURE SELECTION REPORT ---
+print("\n========== FEATURE SELECTION ==========")
+rankings = []
+for h in headers:
+    if h != "Outcome":
+        correlation = calculate_correlation(columns[h], outcome)
+        rankings.append((h, correlation))
 
-    # --- FEATURE SELECTION BASED ON OUTCOME CORRELATION ---
-    print("\n========== FEATURE SELECTION ==========")
-    rankings = []
-    for h in headers:
-        if h != "Outcome":
-            correlation = calculate_correlation(columns[h], outcome)
-            rankings.append((h, correlation))
+rankings.sort(key=lambda x: abs(x[1]), reverse=True)
 
-    # High correlation ko upar lane ke liye
-    rankings.sort(key=lambda x: abs(x[1]), reverse=True)
+selected_features = []
+print("\nFeature Importance with Diabetes Outcome:")
+for feature, value in rankings:
+    if abs(value) >= 0.2:
+        selected_features.append(feature)
+        print(f"✔ {feature:<25} Correlation = {value:.3f} (Important)")
+    else:
+        print(f"✖ {feature:<25} Correlation = {value:.3f} (Less Important)")
 
-    selected_features = []
-    print("\nFeature Importance with Diabetes Outcome:")
-    for feature, value in rankings:
-        if abs(value) >= 0.2:
-            selected_features.append(feature)
-            print(f"✔ {feature:<25} Correlation = {value:.3f} (Important)")
-        else:
-            print(f"✖ {feature:<25} Correlation = {value:.3f} (Less Important)")
-
-    print("\nFinal Selected Features:")
-    print(selected_features)
-    print("=" * 50)
-
-except FileNotFoundError:
-    print("⚠️ Warning: 'diabetes.csv' file nahi mili. Data analysis report skip ho rahi hai.")
-except Exception as e:
-    print(f"⚠️ Data analysis error: {e}")
-
-print("\n" + "="*50 + "\n")
+print("\nFinal Selected Features:")
+print(selected_features)
+print("=" * 50)
+print("\n")
 
 
 # ========================================================
-# PRE-TRAINED LOGISTIC REGRESSION MODEL (Tumhara Core Code)
+# PRE-TRAINED LOGISTIC REGRESSION MODEL (Prediction Logic)
 # ========================================================
 
 intercept = -8.40479
@@ -112,8 +117,7 @@ def predict_diabetes(patient_data):
     probability = 1 / (1 + math.exp(-z))
     return probability
 
-
-# -------- Main Input/Output Program --------
+# -------- Main Input Program --------
 print("====================================")
 print("     Diabetes Prediction System")
 print("====================================")
