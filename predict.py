@@ -19,9 +19,7 @@ csv_data = """Pregnancies,Glucose,BloodPressure,SkinThickness,Insulin,BMI,Diabet
 5,166,72,19,175,25.8,0.587,51,1
 """
 
-# ========================================================
 # PURE PYTHON CORE MATH FUNCTIONS
-# ========================================================
 
 def calculate_correlation(x, y):
     n = len(x)
@@ -48,8 +46,8 @@ for row in data_rows:
         
 outcome = columns["Outcome"]
 
-# --- DYNAMIC CORRELATION MATRIX PRINT ---
-print("\n========== CORRELATION MATRIX ==========")
+#  DYNAMIC CORRELATION MATRIX PRINT 
+print("\n= CORRELATION MATRIX =")
 features = headers
 
 # Header row display
@@ -67,8 +65,8 @@ for f1 in features:
     print()
 print("=" * 130)
 
-# --- FEATURE SELECTION REPORT ---
-print("\n========== FEATURE SELECTION ==========")
+# - FEATURE SELECTION REPORT -
+print("\n= FEATURE SELECTION =")
 rankings = []
 for h in headers:
     if h != "Outcome":
@@ -82,19 +80,16 @@ print("\nFeature Importance with Diabetes Outcome:")
 for feature, value in rankings:
     if abs(value) >= 0.2:
         selected_features.append(feature)
-        print(f"✔ {feature:<25} Correlation = {value:.3f} (Important)")
+        print(f" {feature:<25} Correlation = {value:.3f} (Important)")
     else:
-        print(f"✖ {feature:<25} Correlation = {value:.3f} (Less Important)")
+        print(f" {feature:<25} Correlation = {value:.3f} (Less Important)")
 
 print("\nFinal Selected Features:")
 print(selected_features)
 print("=" * 50)
 print("\n")
 
-
-# ========================================================
 # PRE-TRAINED LOGISTIC REGRESSION MODEL (Prediction Logic)
-# ========================================================
 
 intercept = -8.40479
 
@@ -118,9 +113,9 @@ def predict_diabetes(patient_data):
     return probability
 
 # -------- Main Input Program --------
-print("====================================")
+print("===========")
 print("     Diabetes Prediction System")
-print("====================================")
+print("===========")
 print("Model Status: Ready")
 print()
 
@@ -139,16 +134,16 @@ try:
 
     probability = predict_diabetes(patient_data)
 
-    print("\n=========== RESULT ===========")
+    print("\n= RESULT =")
     print(f"Diabetes Risk Probability: {probability*100:.2f}%")
 
     if probability >= 0.5:
-        print("⚠️ ALERT: Diabetes Risk Detected")
+        print(" ALERT: Diabetes Risk Detected")
         print("Patient may have diabetes.")
     else:
-        print("✅ SAFE: No Diabetes Risk Detected")
+        print(" SAFE: No Diabetes Risk Detected")
         print("Patient is likely not diabetic.")
-    print("==============================")
+    print("=====")
 
 except ValueError:
     print("Error: Please enter only numerical values.")
