@@ -37,7 +37,7 @@ Although several Machine Learning algorithms can be used for diabetes prediction
 | Machine Learning Model | Status | Reason |
 |------------------------|--------|--------|
 | **Logistic Regression** | ✅ Used | Selected because it is suitable for binary classification (Diabetic / Non-Diabetic), easy to implement, interpretable, and achieved approximately **77% accuracy**. |
-| **Decision Tree** | ❌ Not Used | Can overfit the training data and produce less stable predictions. |
+| **Decision Tree** | Not Used | Can overfit the training data and produce less stable predictions. |
 | **Random Forest** | ❌ Not Used | More computationally expensive and less interpretable than Logistic Regression. |
 | **Support Vector Machine (SVM)** | ❌ Not Used | Requires parameter tuning and takes longer to train. |
 | **K-Nearest Neighbors (KNN)** | ❌ Not Used | Prediction is slower because it compares each test sample with all training samples. |
