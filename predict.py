@@ -99,7 +99,7 @@ weights = {
     "BloodPressure": -0.01329,
     "SkinThickness": 0.00061,
     "Insulin": -0.00011,
-    "BMI": 0.08970,
+    "BMI": 0.89070,
     "DiabetesPedigree": 0.94518,
     "Age": 0.01486
 }
@@ -113,9 +113,9 @@ def predict_diabetes(patient_data):
     return probability
 
 # -------- Main Input Program --------
-print("===========")
-print("     Diabetes Prediction System")
-print("===========")
+print("======")
+print("Diabetes Prediction System")
+print("======")
 print("Model Status: Ready")
 print()
 
