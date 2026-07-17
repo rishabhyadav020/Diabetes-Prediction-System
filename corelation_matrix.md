@@ -8,10 +8,6 @@ This report presents the statistical analysis performed on the **Pima Indians Di
 
 Below is the filtered matrix showing the relationships between the features that carry significant statistical weight for diabetes prediction.
 
-# Correlation Matrix (Key Features)
-
-Below is the filtered matrix showing the relationships between the features that carry significant statistical weight for diabetes prediction.
-
 | Features | Glucose | BMI | Age | Pregnancies | BloodPressure | SkinThickness | Insulin | DiabetesPedigree | Outcome |
 |----------|:-------:|:---:|:---:|:-----------:|:-------------:|:-------------:|:--------:|:----------------:|:------:|
 | **Glucose** | **1.000** | 0.221 | 0.264 | 0.129 | 0.153 | 0.057 | 0.331 | 0.137 | **0.466** |
